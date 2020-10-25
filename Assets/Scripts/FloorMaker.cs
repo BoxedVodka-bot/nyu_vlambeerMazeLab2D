@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // instructions for students: clone this project, open the VlambeerLabScene, and then start working on this script
 // based on: Vlambeer's level generation system for Nuclear Throne https://indienova.com/u/root/blogread/1766
@@ -12,26 +13,57 @@ public class FloorMaker : MonoBehaviour {
 
 //	DECLARE CLASS MEMBER VARIABLES:
 //	Declare a private integer called myCounter that starts at 0; 		// count how many floor tiles this FloorMaker has instantiated
+	//private int myCounter = 0;
 //	Declare a public Transform called floorPrefab, assign the prefab in inspector;
+	public Transform floorPrefab;
 //	Declare a public Transform called floorMakerPrefab, assign the prefab in inspector; 
+	public Transform floorMakerPrefab;
+	//public Vector3 myDestination;
+
+	public static int globalTileCount = 0;
+	
 
 	void Update () {
 //		If counter is less than 50, then:
-//			Generate a random number from 0.0f to 1.0f;
+		if (globalTileCount < 500){
+//			Generate a random number from 0.0f to 1.0f;			
+			float randomNumber = Random.Range(0f, 1f);
 //			If random number is less than 0.25f, then rotate myself 90 degrees on Z axis;
-//				... Else if number is 0.25f-0.5f, then rotate myself -90 degrees on Z axis;
-//				... Else if number is 0.99f-1.0f, then instantiate a floorMakerPrefab clone at my current position;
+			if(randomNumber < 0.25f){
+                transform.Rotate(0, 0, 90f);
+//				... Else if number is 0.25f-0.5f, then rotate myself -90 degrees on Z axis;				
+            }else if (randomNumber >= 0.25f && randomNumber <= 0.50f){
+                transform.Rotate(0, 0, -90f);
+//				... Else if number is 0.99f-1.0f, then instantiate a floorMakerPrefab clone at my current position;				
+           	}else if (randomNumber >= 0.99f && randomNumber <= 1f){
+				Instantiate(floorMakerPrefab, transform.position, Quaternion.Euler(0, 0, 0));
+			}
 //			// end elseIf
-
 //			Instantiate a floorPrefab clone at current position;
+			Instantiate(floorPrefab, transform.position, Quaternion.Euler(0, 0, 0));
 //			Move 1 unit "upwards" based on this object's local rotation (e.g. with rotation 0,0,0 "upwards" is (0,1,0)... but with rotation 0,0,180 then "upwards" is (0,-1, 0)... )
+			transform.Translate(0, 1f, 0);
 //			Increment counter;
+			globalTileCount += 1;
+
 //		Else:
 //			Destroy my game object; 		// self destruct if I've made enough tiles already
+		} else if (globalTileCount == 600){
+			Destroy(gameObject);
+		}
+
+		if(Input.GetKeyDown(KeyCode.R)){
+			globalTileCount = 0;
+
+		}
+	}
+
+	public void Re(){
+		globalTileCount = 0;
+		SceneManager.LoadScene( SceneManager.GetActiveScene().name );
 	}
 
 } // don't delete, end of FloorMaker class
-
 
 // STEP 2: =====================================================================================
 // implement, test, and stabilize the system
