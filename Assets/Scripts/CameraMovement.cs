@@ -20,13 +20,17 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         PanCamera();
+
+        //Scroling for zoom in/out
         float scrollData;
         scrollData = Input.GetAxis("Mouse ScrollWheel");
         targetZoom = targetZoom - scrollData*zoomFactor;
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetZoom, Time.deltaTime*zoomLerpSpeed);
+        //Zoom limits
         targetZoom = Mathf.Clamp(targetZoom, 4.5f, 20f);
     }
 
+    //Drag mouse to move  map
     private void PanCamera(){
         if(Input.GetMouseButtonDown(0)){
             dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);
